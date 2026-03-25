@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お客様の声 — More Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="wireframe-base.css">
+  <style>
+    /* ===== PAGE-SPECIFIC STYLES ===== */
+
+    /* ページヘッダー */
+    .page-hero {
+      background: var(--bg-mid);
+      padding: 120px 80px 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero-inner {
+      max-width: 640px;
+    }
+    .page-hero-title {
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .page-hero-lead {
+      font-size: 15px;
+      color: var(--text-sub);
+      line-height: 2;
+    }
+
+    /* 実績サマリー */
+    .stats-section {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 72px 80px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .stat-item {
+      background: var(--bg2);
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .stat-num-lg {
+      font-size: 52px;
+      font-weight: 400;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-num-lg small {
+      font-size: 22px;
+      color: var(--text-sub);
+    }
+    .stat-label-lg {
+      font-size: 13px;
+      color: var(--text-sub);
+      letter-spacing: 0.06em;
+    }
+
+    /* 口コミカード一覧 */
+    .reviews-section {
+      background: var(--bg);
+      padding: 96px 80px;
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .review-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .review-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .review-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary-l);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .review-meta {}
+    .review-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+    .review-pet {
+      font-size: 11px;
+      color: var(--text-sub);
+      letter-spacing: 0.04em;
+    }
+    .review-stars {
+      display: flex;
+      gap: 3px;
+      color: #E8A040;
+      font-size: 14px;
+    }
+    .review-body {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.9;
+      flex: 1;
+    }
+    .review-body::before {
+      content: '"';
+      font-size: 28px;
+      color: var(--primary-l);
+      line-height: 1;
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    .review-tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      font-size: 10px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    /* 注記テキスト */
+    .reviews-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-top: 40px;
+      opacity: 0.7;
+    }
+
+    /* ハンバーガー */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(255,255,255,0.98);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      padding: 24px 24px 32px;
+      gap: 20px;
+      z-index: 99;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 14px;
+      color: var(--text-sub);
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 1024px) {
+      .page-hero { padding: 100px 40px 64px; }
+      .stats-section { padding: 56px 40px; }
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .reviews-section { padding: 72px 40px; }
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .hamburger { display: flex; }
+      nav a:not(.btn-line) { display: none; }
+      .page-hero { padding: 88px 20px 48px; }
+      .page-hero-title { font-size: 32px; }
+      .stats-section { padding: 48px 20px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .reviews-section { padding: 56px 20px; }
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="/" class="header-logo">
+    <div class="ph-logo">More Friends</div>
+  </a>
+  <nav>
+    <a href="#">サービス内容</a>
+    <a href="#">料金プラン</a>
+    <a href="#">利用の流れ</a>
+    <a href="#">シッター紹介</a>
+    <a href="#">ブログ</a>
+    <a href="#" class="btn-line">LINEで相談</a>
+  </nav>
+  <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')" aria-label="メニュー">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- MOBILE MENU -->
+<nav class="mobile-menu" id="mobileMenu">
+  <a href="#">サービス内容</a>
+  <a href="#">料金プラン</a>
+  <a href="#">利用の流れ</a>
+  <a href="#">シッター紹介</a>
+  <a href="#">ブログ</a>
+  <a href="#" class="btn-line">LINEで相談</a>
+</nav>
+
+
+<!-- ① ページヘッダー -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <span class="label">Customer Reviews</span>
+    <h1 class="page-hero-title">お客様の声</h1>
+    <p class="page-hero-lead">
+      実際にMore Friendsをご利用いただいた飼い主さまから寄せられた声をご紹介します。<br>
+      ペットさんと飼い主さま、双方の笑顔がいちばんの励みになっています。
+    </p>
+  </div>
+</section>
+
+
+<!-- ② 実績数字（サマリー） -->
+<section class="stats-section">
+  <div class="section-header" style="text-align:center; margin-bottom:48px;">
+    <span class="label" style="text-align:center;">Track Record</span>
+    <h2 class="section-title">これまでの実績</h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num-lg">98<small>%</small></div>
+      <div class="stat-label-lg">顧客満足度</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num-lg">★<small> 4.9</small></div>
+      <div class="stat-label-lg">平均評価</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num-lg">80<small>%+</small></div>
+      <div class="stat-label-lg">リピート率</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ③ 口コミカード一覧 -->
+<section class="reviews-section">
+  <div class="section-header">
+    <span class="label">Voices</span>
+    <h2 class="section-title">みなさまのコメント</h2>
+    <p class="section-sub">ペットさんの種類・状況はさまざまですが、どの子にも誠実に向き合っています。</p>
+  </div>
+
+  <div class="reviews-grid">
+
+    <!-- カード 1 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐶</div>
+        <div class="review-meta">
+          <div class="review-name">M.T. さま</div>
+          <div class="review-pet">ミニチュアダックスフンド（6歳）</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">初めてペットシッターを頼むことにとても不安がありましたが、カウンセリングで丁寧に話を聞いてもらえて安心しました。シッティング後の報告もとても細かく、出張中も気持ちが楽でした。</p>
+      <span class="review-tag">お留守番サポート</span>
+    </div>
+
+    <!-- カード 2 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐱</div>
+        <div class="review-meta">
+          <div class="review-name">Y.K. さま</div>
+          <div class="review-pet">スコティッシュフォールド（3歳）</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">うちの子は超がつく繊細さんで、知らない人には近づかない子なのですが、2回目から自分から近づいていくようになりました。信頼関係を丁寧に作ってくださるのが伝わります。</p>
+      <span class="review-tag">繊細な子への対応</span>
+    </div>
+
+    <!-- カード 3 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐕</div>
+        <div class="review-meta">
+          <div class="review-name">A.N. さま</div>
+          <div class="review-pet">柴犬（4歳）</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">急な残業が続いたときにお願いしました。「いつでも気軽に連絡してください」という言葉が本当にありがたかったです。帰宅したときに元気でいてくれることが何よりも安心でした。</p>
+      <span class="review-tag">急な予定変更</span>
+    </div>
+
+    <!-- カード 4 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐱</div>
+        <div class="review-meta">
+          <div class="review-name">R.S. さま</div>
+          <div class="review-pet">アメリカンショートヘア（5歳）/ 2頭</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">2頭いるのでペットホテルが難しく、ずっと悩んでいました。自宅でいつもと変わらない生活をさせてもらえるのが一番。写真付きの報告もとても嬉しかったです。リピート確定です。</p>
+      <span class="review-tag">多頭飼い</span>
+    </div>
+
+    <!-- カード 5 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐩</div>
+        <div class="review-meta">
+          <div class="review-name">K.O. さま</div>
+          <div class="review-pet">トイプードル（2歳）</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">「お世話をタスクとしてこなすのではなく、ペットさんの気持ちを最優先に」という姿勢がこちらにも伝わってきます。初回のカウンセリングから椎名さんのことが大好きになりました。</p>
+      <span class="review-tag">お散歩代行</span>
+    </div>
+
+    <!-- カード 6 -->
+    <div class="review-card">
+      <div class="review-card-header">
+        <div class="review-avatar">🐶</div>
+        <div class="review-meta">
+          <div class="review-name">T.M. さま</div>
+          <div class="review-pet">ゴールデンレトリーバー（7歳）</div>
+        </div>
+      </div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-body">GWの帰省に合わせて長期でお願いしました。毎日の報告が楽しみで、旅行先でも安心して過ごせました。うちの子の性格を細かく把握してくださっていて、本当に「友達に預けた」という感覚でした。</p>
+      <span class="review-tag">長期シッティング</span>
+    </div>
+
+  </div>
+
+  <p class="reviews-note">※ お客様の声は許可を得た上で掲載しています。イニシャルで表記しています。</p>
+</section>
+
+
+<!-- ④ CTA -->
+<section class="cta-section">
+  <span class="label" style="color:rgba(255,255,255,0.6);">Start Here</span>
+  <h2 class="section-title">まずは無料カウンセリングから</h2>
+  <p>
+    ペットさんのこと、どんな些細なことでもお聞きします。<br>
+    お気軽にご相談ください。
+  </p>
+  <div class="cta-buttons">
+    <a href="#" class="btn-cta-white">カウンセリングを申し込む</a>
+    <a href="#" class="btn-line-lg">💬 LINEで相談する</a>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="ph-logo" style="margin-bottom:14px;">More Friends</div>
+      <p class="footer-tagline">そっと心に触れる、友達のような<br>ペットシッターサービス。<br>東京都・千葉県対応</p>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-nav-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">More Friendsとは</a></li>
+          <li><a href="#">サービス内容</a></li>
+          <li><a href="#">料金プラン</a></li>
+          <li><a href="#">利用の流れ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#">シッター紹介</a></li>
+          <li><a href="#">お客様の声</a></li>
+          <li><a href="#">対応エリア</a></li>
+          <li><a href="#">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">お問い合わせ</a></li>
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 More Friends. All rights reserved.</span>
+    <span>動物取扱責任者：椎名春香 / 東京都・千葉県</span>
+  </div>
+</footer>
+
+</body>
+</html>

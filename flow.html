@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>利用の流れ — More Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="wireframe-base.css">
+  <style>
+    /* ページ固有スタイル */
+    body { font-family: 'M PLUS Rounded 1c', 'Zen Maru Gothic', sans-serif; }
+
+    /* ---- PAGE HEADER ---- */
+    .page-header {
+      background: var(--bg-mid);
+      padding: 100px 80px 72px;
+      padding-top: calc(64px + 56px); /* header height + spacing */
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header .label { display: block; margin-bottom: 12px; }
+    .page-header h1 {
+      font-size: 40px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-sub);
+      max-width: 560px;
+      line-height: 1.9;
+    }
+
+    /* ---- STEP SECTION (bg2 with border) ---- */
+    .section-flow {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 96px 80px;
+    }
+    .section-flow .section-header { margin-bottom: 64px; }
+
+    /* 6ステップを2行3列グリッド */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px 40px;
+    }
+
+    .flow-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      position: relative;
+    }
+
+    .flow-card-num {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .flow-card .flow-icon {
+      margin-bottom: 20px;
+    }
+
+    .flow-card-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .flow-card-text {
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.9;
+    }
+
+    .flow-card-note {
+      display: inline-block;
+      margin-top: 14px;
+      background: var(--primary-l);
+      color: var(--primary-d);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    /* 矢印コネクター（1行目：1→2→3、2行目：4→5→6） */
+    .flow-row-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: -20px 0;
+      padding: 0 80px;
+      position: relative;
+    }
+    .flow-row-label {
+      font-size: 12px;
+      color: var(--primary);
+      text-align: center;
+      margin: 8px 0 28px;
+      letter-spacing: 0.06em;
+    }
+
+    /* ---- FAQ SECTION ---- */
+    .section-faq {
+      background: var(--bg);
+      padding: 96px 80px;
+    }
+    .section-faq .section-header { margin-bottom: 56px; }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-q {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px 0;
+      cursor: pointer;
+    }
+    .faq-q-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .faq-q-text {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .faq-toggle {
+      font-size: 20px;
+      color: var(--primary);
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      line-height: 1;
+      margin-top: 4px;
+    }
+    .faq-toggle.open { transform: rotate(45deg); }
+
+    .faq-a {
+      display: none;
+      padding: 0 0 24px 44px;
+    }
+    .faq-a.open { display: block; }
+    .faq-a-mark {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      background: var(--primary-l);
+      color: var(--primary-d);
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 28px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .faq-a-text {
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.9;
+    }
+
+    /* ---- CTA SECTION ---- */
+    .cta-section .section-title { font-size: 36px; }
+
+    /* ---- HEADER ---- */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 80px;
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+    }
+    nav { display: flex; align-items: center; gap: 28px; }
+    nav a {
+      font-size: 12px;
+      color: var(--text-sub);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    nav a:hover { color: var(--primary); }
+
+    /* LINE button in nav */
+    .btn-line {
+      background: #06C755;
+      color: #fff !important;
+      font-size: 12px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    /* breadcrumb */
+    .breadcrumb {
+      background: var(--bg);
+      padding: 12px 80px;
+      border-bottom: 1px solid var(--border);
+      margin-top: 64px;
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+    .breadcrumb a { color: var(--text-sub); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb span { color: var(--primary); }
+
+    /* section-header */
+    .section-header { text-align: left; }
+    .section-header .label { display: block; margin-bottom: 12px; }
+    .section-header .section-title { margin-bottom: 16px; }
+    .section-header .section-sub { max-width: 600px; }
+
+    /* flow intro note */
+    .flow-intro-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--primary-l);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 48px;
+      max-width: 720px;
+    }
+    .flow-intro-note-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+    .flow-intro-note-text { font-size: 13px; color: var(--primary-d); line-height: 1.8; }
+
+    /* section separator label */
+    .step-phase-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding-left: 2px;
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="ph-logo">[LOGO]</div>
+  <nav>
+    <a href="/service">サービス内容</a>
+    <a href="/price">料金プラン</a>
+    <a href="/flow" style="color:var(--primary);font-weight:500;">利用の流れ</a>
+    <a href="/sitter">シッター紹介</a>
+    <a href="/blog">ブログ</a>
+    <a href="/contact" class="btn-line">LINEで相談</a>
+  </nav>
+</header>
+
+<!-- ===== BREADCRUMB ===== -->
+<nav class="breadcrumb">
+  <a href="/">ホーム</a>
+  <span>›</span>
+  <span>利用の流れ</span>
+</nav>
+
+<!-- ===== PAGE HEADER ===== -->
+<section class="page-header">
+  <span class="label">How it Works</span>
+  <h1>利用の流れ</h1>
+  <p>初めてのご利用も安心してお任せください。<br>お問い合わせからシッティング当日まで、丁寧にサポートします。</p>
+</section>
+
+<!-- ===== STEP SECTION ===== -->
+<section class="section-flow">
+  <div class="section-header">
+    <span class="label">Step by Step</span>
+    <h2 class="section-title">申込みから当日まで</h2>
+    <p class="section-sub">全6ステップで、はじめての方でもスムーズにご利用いただけます。</p>
+  </div>
+
+  <div class="flow-intro-note">
+    <span class="flow-intro-note-icon">💡</span>
+    <p class="flow-intro-note-text">
+      <strong>カウンセリングはすべての利用で必須です。</strong><br>
+      ペットさんの性格・生活リズム・NG事項を事前に丁寧に把握することで、当日も安心してお預かりできます。初回カウンセリングは、シッティングをご予約いただいた場合は実質無料です。
+    </p>
+  </div>
+
+  <div class="flow-grid">
+
+    <!-- STEP 01 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 01</div>
+      <div class="flow-icon">💬</div>
+      <div class="flow-card-title">お問い合わせ・<br>日程把握</div>
+      <div class="flow-card-text">
+        LINEまたはお問い合わせフォームからご連絡ください。希望日時・シッティング時間・ペットの種類と頭数・お住まいの最寄り駅などをお知らせください。
+      </div>
+      <span class="flow-card-note">📍 LINE / フォームどちらでもOK</span>
+    </div>
+
+    <!-- STEP 02 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 02</div>
+      <div class="flow-icon">📅</div>
+      <div class="flow-card-title">カウンセリング<br>日程調整</div>
+      <div class="flow-card-text">
+        ご希望の日程をもとに、カウンセリング（ご自宅への訪問・対面）の日程を調整します。移動時間や他の案件との兼ね合いを確認の上、日程を仮確定します。
+      </div>
+      <span class="flow-card-note">📍 ご自宅への訪問です</span>
+    </div>
+
+    <!-- STEP 03 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 03</div>
+      <div class="flow-icon">🤝</div>
+      <div class="flow-card-title">カウンセリング実施<br>（面会・ペット観察）</div>
+      <div class="flow-card-text">
+        ご自宅でペットさんと初対面。性格・ルーティン・ストレスサイン・飼い主さまの想いを丁寧にヒアリングします。お世話内容・やらないことの合意もここで行います。
+      </div>
+      <span class="flow-card-note">⏱ 約60〜90分</span>
+    </div>
+
+    <!-- STEP 04 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 04</div>
+      <div class="flow-icon">💳</div>
+      <div class="flow-card-title">お支払い<br>（シッティング3日前まで）</div>
+      <div class="flow-card-text">
+        カウンセリング内容をもとにシッティング時間・内容を確定し、請求書をお送りします。シッティング開始の<strong>3日前まで</strong>にお支払いをお願いします。入金確認後、次のステップへ進みます。
+      </div>
+      <span class="flow-card-note">⚠ 入金確認後に進みます</span>
+    </div>
+
+    <!-- STEP 05 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 05</div>
+      <div class="flow-icon">🔑</div>
+      <div class="flow-card-title">鍵の受け渡し</div>
+      <div class="flow-card-text">
+        基本はカウンセリング時に直接お受け取りします。郵送の場合はレターパック等をお客様実費にてお送りいただきます。一軒家の場合はポストへのキーボックス設置に対応しています。
+      </div>
+      <span class="flow-card-note">📍 シッティング前日までに必着</span>
+    </div>
+
+    <!-- STEP 06 -->
+    <div class="flow-card">
+      <div class="flow-card-num">STEP 06</div>
+      <div class="flow-icon">🐾</div>
+      <div class="flow-card-title">シッティング当日</div>
+      <div class="flow-card-text">
+        前日に確認のご連絡をします。当日は予定時刻にご自宅へお伺いし、ペットさんのお世話をします。終了後2時間以内に、写真付きの詳細レポートをLINEでお送りします。
+      </div>
+      <span class="flow-card-note">📸 写真付きレポートをお届け</span>
+    </div>
+
+  </div>
+
+  <!-- 補足: 2回目以降 -->
+  <div style="margin-top:56px; padding:32px 36px; background:var(--bg); border:1px solid var(--border); border-radius:12px; max-width:720px;">
+    <div class="flow-card-num" style="margin-bottom:12px;">2回目以降のご利用について</div>
+    <p style="font-size:13px; color:var(--text-sub); line-height:1.9;">
+      2回目以降はカウンセリング・鍵の受け渡し等の手続きは不要です。ご希望日程をご連絡いただき、日程確定・お支払い後にシッティングをご依頼いただけます。ペットさんの状況に変化があった場合はお気軽にご相談ください。
+    </p>
+  </div>
+</section>
+
+<!-- ===== FAQ SECTION ===== -->
+<section class="section-faq">
+  <div class="section-header">
+    <span class="label">FAQ</span>
+    <h2 class="section-title">よくあるご質問</h2>
+    <p class="section-sub">ご不明な点はLINEからもお気軽にお問い合わせください。</p>
+  </div>
+
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">カウンセリングは必ず必要ですか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>はい、初回は必須です。ペットさんの性格・生活リズム・ストレスサインをしっかり把握してから初めて安心してお世話ができます。シッティングをご予約いただいた場合、カウンセリング費用は初回シッティング料金に含まれます（実質無料）。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">カウンセリングだけキャンセルした場合はどうなりますか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>カウンセリング（面会）実施後にシッティングのご依頼をキャンセルされた場合、キャンセル料3,300円（税込）が発生します。カウンセリング前のキャンセルは無料です。詳しくはキャンセルポリシーをご確認ください。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">支払いはいつまでに必要ですか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>シッティング開始の3日前までにお支払いをお願いしています。入金確認後に鍵の受け渡し等の最終調整へ進みます。支払い方法は請求書発行時にご案内します。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">鍵の受け渡しはどのように行いますか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>基本はカウンセリング時に直接お受け取りします。郵送が必要な場合はレターパック等（お客様実費）でシッティング前日までに必着となるよう送付をお願いします。一軒家の場合はポストへのキーボックス設置にも対応しています。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">当日の様子はわかりますか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>シッティング終了後2時間以内に、写真付きの詳細レポートをLINEでお送りします。お世話中の様子・ペットさんの状態・気になった点などをできる限りお伝えします。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">2回目以降の利用はカウンセリングが不要ですか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>はい、2回目以降はカウンセリングは不要です。ご希望日程をご連絡いただき、日程確定・お支払い後にシッティングをご依頼いただけます。ただし、ペットさんの状況に変化（頭数変更・病気・引っ越しなど）があった場合は再確認のお時間をいただく場合があります。
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-q-text">対応できないことはありますか？</div>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <p class="faq-a-text">
+          <span class="faq-a-mark">A</span>投薬・人間の介護・高所作業・火を使う調理などはお受けできません。また、ペットの心身に負担のかかる条件でのシッティングもお断りする場合があります。詳しくはサービス内容ページをご確認いただくか、LINEからお気軽にご相談ください。
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="cta-section">
+  <span class="label" style="color:rgba(255,255,255,0.6);">Contact</span>
+  <h2 class="section-title">まず、気軽にご相談ください。</h2>
+  <p>カウンセリングは初回実質無料。<br>「うちの子、大丈夫かな？」という小さな不安も、ぜひお気軽にどうぞ。</p>
+  <div class="cta-buttons">
+    <a href="/contact" class="btn-cta-white">無料カウンセリングを申し込む</a>
+    <a href="#" class="btn-line-lg">💬 LINEで相談する</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="ph-logo" style="margin-bottom:16px;">[LOGO]</div>
+      <p class="footer-tagline">
+        そっと心に触れる、友達のような<br>
+        ペットシッターサービス。<br>
+        東京都・千葉県対応
+      </p>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-nav-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="/about">More Friendsとは</a></li>
+          <li><a href="/service">サービス内容</a></li>
+          <li><a href="/price">料金プラン</a></li>
+          <li><a href="/flow">利用の流れ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="/sitter">シッター紹介</a></li>
+          <li><a href="/reviews">お客様の声</a></li>
+          <li><a href="/area">対応エリア</a></li>
+          <li><a href="/blog">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/contact">お問い合わせ</a></li>
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+          <li><a href="/cancel">キャンセルポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 More Friends. All rights reserved.</span>
+    <span>動物取扱責任者：椎名春香 / 東京都・千葉県</span>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(el) {
+    const toggle = el.querySelector('.faq-toggle');
+    const answer = el.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+    // close all
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-toggle').forEach(t => t.classList.remove('open'));
+    if (!isOpen) {
+      answer.classList.add('open');
+      toggle.classList.add('open');
+    }
+  }
+</script>
+
+</body>
+</html>

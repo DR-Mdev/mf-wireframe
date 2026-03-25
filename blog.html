@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ブログ一覧 — More Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="wireframe-base.css">
+  <style>
+    /* ページ固有スタイル */
+    body { padding-top: 64px; }
+
+    /* ─── ページヘッダー ─── */
+    .page-header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 72px 80px 64px;
+    }
+    .page-header .label { margin-bottom: 12px; }
+    .page-header .section-title { margin-bottom: 12px; }
+    .page-header .section-sub { margin-top: 0; }
+
+    /* ─── カテゴリフィルター ─── */
+    .filter-bar {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 80px;
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .filter-btn {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: var(--text-sub);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 18px 24px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover { color: var(--primary); }
+    .filter-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* ─── 記事グリッドセクション ─── */
+    .blog-list-section {
+      background: var(--bg-mid);
+      padding: 72px 80px 80px;
+    }
+    .blog-grid-main {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+
+    /* ─── ページネーション ─── */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    .page-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text-sub);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .page-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .page-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .page-btn.arrow {
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    /* ─── フッター ─── */
+    .footer-top {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 80px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 32px;
+    }
+    .footer-tagline { font-size: 12px; line-height: 1.8; color: rgba(255,255,255,0.45); margin-top: 16px; }
+    .footer-nav { display: flex; gap: 64px; flex-wrap: wrap; }
+    .footer-nav-col h4 {
+      font-size: 10px;
+      color: rgba(255,255,255,0.30);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .footer-nav-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-nav-col ul li a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+    }
+    .footer-nav-col ul li a:hover { color: rgba(255,255,255,0.8); }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HEADER (共通)
+════════════════════════════════════════ -->
+<header>
+  <a href="/" class="header-logo">
+    <div class="ph-logo">More Friends</div>
+  </a>
+  <nav>
+    <a href="/about">More Friendsとは</a>
+    <a href="/service">サービス内容</a>
+    <a href="/price">料金プラン</a>
+    <a href="/sitter">シッター紹介</a>
+    <a href="/blog" style="color:var(--primary); font-weight:500;">ブログ</a>
+    <a href="/flow">利用の流れ</a>
+    <a href="/contact" class="btn-line">LINEで相談</a>
+  </nav>
+</header>
+
+
+<!-- ═══════════════════════════════════════
+     1. ページヘッダー
+════════════════════════════════════════ -->
+<section class="page-header">
+  <span class="label">Blog</span>
+  <h1 class="section-title">ペットシッターコラム</h1>
+  <p class="section-sub">ペットとの暮らしをもっと豊かに。お留守番のコツ・シッター選びの知識・日常のケアまで、飼い主さんに役立つ情報をお届けします。</p>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     2. カテゴリフィルター
+════════════════════════════════════════ -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="setFilter(this)">すべて</button>
+  <button class="filter-btn" onclick="setFilter(this)">ペットケア</button>
+  <button class="filter-btn" onclick="setFilter(this)">お役立ち情報</button>
+  <button class="filter-btn" onclick="setFilter(this)">シッターの日常</button>
+  <button class="filter-btn" onclick="setFilter(this)">お知らせ</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     3. 記事カードグリッド
+════════════════════════════════════════ -->
+<section class="blog-list-section">
+  <div class="blog-grid-main">
+
+    <!-- Card 1 -->
+    <a href="/blog/first-meeting-tips" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">ペットケア</div>
+          <div class="blog-title">信頼関係を築くための最初の5分間。初対面でやること・やらないこと</div>
+          <div class="blog-date">2026.03.15</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a href="/blog/home-sitter-for-sensitive-pets" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">お役立ち情報</div>
+          <div class="blog-title">ペットホテルが苦手な子のためのシッターの使い方。繊細な子ほど自宅シッターが向く理由</div>
+          <div class="blog-date">2026.03.08</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="/blog/first-time-counseling" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">お役立ち情報</div>
+          <div class="blog-title">初めてペットシッターを使う方へ。カウンセリングで何を聞けばいいか</div>
+          <div class="blog-date">2026.02.28</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 4 -->
+    <a href="/blog/leaving-home-stress-reduction" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">ペットケア</div>
+          <div class="blog-title">お留守番中のストレスサインとは？行動から読み解くペットの気持ち</div>
+          <div class="blog-date">2026.02.20</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 5 -->
+    <a href="/blog/sitter-daily-record" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">シッターの日常</div>
+          <div class="blog-title">シッター日記：初めてお会いしたポメラニアンのぽんちゃんのこと</div>
+          <div class="blog-date">2026.02.12</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 6 -->
+    <a href="/blog/how-to-choose-sitter" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">お役立ち情報</div>
+          <div class="blog-title">ペットシッター選びで後悔しないための5つのチェックポイント</div>
+          <div class="blog-date">2026.02.05</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 7 -->
+    <a href="/blog/multi-pet-care" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">ペットケア</div>
+          <div class="blog-title">多頭飼いのお留守番ケア。犬と猫が一緒にいるお家でシッターができること</div>
+          <div class="blog-date">2026.01.28</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 8 -->
+    <a href="/blog/spring-schedule-2026" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">お知らせ</div>
+          <div class="blog-title">【2026年春】GW・大型連休の予約受付についてのご案内</div>
+          <div class="blog-date">2026.01.20</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Card 9 -->
+    <a href="/blog/why-counseling-is-free" style="text-decoration:none;">
+      <div class="blog-card">
+        <div class="ph-img" style="aspect-ratio:16/9;" data-label="記事サムネイル"></div>
+        <div class="blog-body">
+          <div class="blog-cat">シッターの日常</div>
+          <div class="blog-title">なぜカウンセリングを大切にするのか。「初対面」こそがシッティングの始まり</div>
+          <div class="blog-date">2026.01.10</div>
+        </div>
+      </div>
+    </a>
+
+  </div><!-- /blog-grid-main -->
+
+
+  <!-- ─── 4. ページネーション ─── -->
+  <div class="pagination">
+    <div class="page-btn arrow">←</div>
+    <div class="page-btn active">1</div>
+    <div class="page-btn">2</div>
+    <div class="page-btn">3</div>
+    <div class="page-btn arrow">→</div>
+  </div>
+
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     CTA セクション
+════════════════════════════════════════ -->
+<section class="cta-section">
+  <span class="label" style="color:rgba(255,255,255,0.6);">Contact</span>
+  <h2 class="section-title">まずはお気軽に<br>ご相談ください</h2>
+  <p>初回カウンセリングは実質無料。<br>ペットさんのこと、どんな些細なことでもお聞きします。</p>
+  <div class="cta-buttons">
+    <a href="/contact" class="btn-cta-white">お問い合わせフォーム</a>
+    <a href="#" class="btn-line-lg">💬 LINEで相談する</a>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     FOOTER (共通)
+════════════════════════════════════════ -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="ph-logo" style="font-size:13px; display:inline-block; background:rgba(255,255,255,0.1); padding:7px 18px; border-radius:6px; color:rgba(255,255,255,0.8); letter-spacing:0.08em;">More Friends</div>
+      <p class="footer-tagline">そっと心に触れる、<br>友達のような存在でありたい。</p>
+    </div>
+    <div class="footer-nav">
+      <div class="footer-nav-col">
+        <h4>Service</h4>
+        <ul>
+          <li><a href="/about">More Friendsとは</a></li>
+          <li><a href="/service">サービス内容</a></li>
+          <li><a href="/price">料金プラン</a></li>
+          <li><a href="/flow">利用の流れ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="/sitter">シッター紹介</a></li>
+          <li><a href="/area">対応エリア</a></li>
+          <li><a href="/reviews">お客様の声</a></li>
+          <li><a href="/blog">ブログ</a></li>
+        </ul>
+      </div>
+      <div class="footer-nav-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="/contact">お問い合わせ</a></li>
+          <li><a href="/cancel">キャンセルポリシー</a></li>
+          <li><a href="/terms">利用規約</a></li>
+          <li><a href="/privacy">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copy">
+    <span>© 2026 More Friends. All rights reserved.</span>
+    <span>動物取扱責任者：椎名春香 / 東京都・千葉県</span>
+  </div>
+</footer>
+
+
+<script>
+  function setFilter(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
